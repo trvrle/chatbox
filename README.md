@@ -1,4 +1,7 @@
 # chatbox
 chatting browser application
-npm install express@4.15.2
-npm install socket.io
+
+Instructions:
+1. Run npm install
+2. Run node index.js
+3. Open localhost:3000 on browser
