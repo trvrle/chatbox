@@ -5,24 +5,27 @@
 }
 
 body {
-  font: 13px Helvetica, Arial;
+  background-color: #cccccc;
   display: flex;
   justify-content: center;
 }
 
 .container {
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 960px;
-  border: 1px solid black;
+  border-radius: 30px;
 }
 
 form {
+  border-radius: 0px 0px 30px 30px;
+  background-color: #404040;
   margin-top: auto;
-  padding: 3px;
+  padding: 20px;
   width: 100%;
-  background: black;
 }
 
 form input {
@@ -39,16 +42,27 @@ form button {
   padding: 10px;
 }
 
-#messages {
-  list-style-type: none;
+/* #messages {
   margin: 0;
   padding: 0;
+} */
+
+.message-container {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 15px;
 }
 
-#messages li {
-  padding: 5px 10px;
-}
-
-#messages li:nth-child(odd) {
-  background: #eee;
+.msg {
+  padding: 10px;
+  min-height: 50px;
+  max-width: 60%;
+  background-color: #404040;
+  color: white;
+  /* border-radius: 12px 12px 12px 3px; */
+  border-radius: 12px 12px 3px 12px;
+  font-size: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }

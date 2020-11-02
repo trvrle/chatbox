@@ -3,14 +3,15 @@
   <head>
     <title>chatbox</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
   </head>
   <body>
     <div class="container">
-        <ul id="messages"></ul>
-        <form action="">
-          <input id="m" autocomplete="off" />
-          <button>Send</button>
-        </form>
+      <div id="messages"></div>
+      <form action="">
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+      </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

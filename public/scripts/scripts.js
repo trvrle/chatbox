@@ -7,6 +7,6 @@ $(function () {
         return false;
     });
     socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<div class="message-container"></div>').append($('<div class="msg"></div>').text(msg)));
     });
 });
