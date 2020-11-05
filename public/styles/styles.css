@@ -42,34 +42,44 @@ form button {
   padding: 10px;
 }
 
-/* #messages {
-  margin: 0;
-  padding: 0;
-} */
-
 .message-container {
   display: flex;
   margin: 15px;
 }
 
-.message-container-self {
+.message-container-left {
+  flex-direction: row;
+}
+
+.message-container-right {
   flex-direction: row-reverse;
 }
 
 .message {
+  max-width: 60%;
+}
+
+.message-content {
   padding: 10px;
   min-height: 50px;
-  max-width: 60%;
-  background-color: #404040;
   color: white;
-  border-radius: 12px 12px 12px 3px;
   font-size: 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
 
-.message-self {
+.message-content-left {
+  background-color: #404040;
+  border-radius: 12px 12px 12px 3px;
+}
+
+.message-content-right {
   border-radius: 12px 12px 3px 12px;
   background-color: #00cc99;
+}
+
+.timestamp {
+  color: white;
+  font-size: 15px;
 }

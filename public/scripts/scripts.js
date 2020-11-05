@@ -2,17 +2,42 @@ $(function () {
     var socket = io();
     $('form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
-        const message = $('#m').val()
-        $('#messages')
-            .append($('<div></div>').addClass("message-container").addClass("message-container-self")
-            .append($('<div></div>').addClass("message").addClass("message-self").text(message)));
-        socket.emit('chat-message', $('#m').val());
-        $('#m').val('');
+        const m = $('#m')
+        if (m.val() === '') return false;
+        socket.emit('send-chat', m.val());
+        m.val('');
         return false;
     });
-    socket.on('chat-message', function(msg){
-        $('#messages')
-            .append($('<div></div>').addClass("message-container").css("flex-direction", "row")
-            .append($('<div></div>').addClass("message").css("border-radius", "12px 12px 12px 3px").text(msg)));
+
+    socket.on('self-message', function(response) {
+        createSelfMessage(response)
+    });
+
+    socket.on('chat-message', function(response) {
+        createChatMessage(response);
     });
 });
+
+function createSelfMessage(r) {
+    createMessage(r, "right")
+}
+
+function createChatMessage(r) {
+    createMessage(r, "left")
+}
+
+function createMessage(r, position) {
+    $('#messages')
+        .append(
+            $('<div>').addClass("message-container message-container-" + position)
+            .append(
+                $('<div>').addClass("message")
+                .append(
+                    $('<div>').addClass("timestamp").text(r.timestamp)
+                )
+                .append(
+                    $('<div>').addClass("message-content message-content-" + position).text(r.message)
+                )
+            )
+        );
+}
