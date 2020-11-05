@@ -40,4 +40,10 @@ function createMessage(r, position) {
                 )
             )
         );
+    updateScroll();
+}
+
+function updateScroll() {
+    let messages = document.getElementById("messages");
+    messages.scrollTop = messages.scrollHeight;
 }
