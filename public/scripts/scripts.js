@@ -7,7 +7,7 @@ $(function () {
         const m = $('#m')
         if (m.val() === '') return false;
         const request = {
-            username: getUsername(),
+            username: username,
             message: m.val()
         }
         socket.emit('send-chat', request);
@@ -29,7 +29,7 @@ $(function () {
     });
 
     socket.on('set-username', function(response) {
-        setUsername(response);
+        username = response;
     });
 });
 
@@ -75,12 +75,4 @@ function createJoinMessage(r) {
         )
     );
     updateScroll();
-}
-
-function setUsername(u) {
-    this.username = u;
-}
-
-function getUsername() {
-    return this.username;
 }
