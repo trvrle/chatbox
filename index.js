@@ -3,6 +3,8 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+let users = [];
+
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
@@ -10,9 +12,14 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('send-chat', (msg) => {
+  const username = generateUserName();
+  socket.broadcast.emit('join-message', username);
+  socket.emit('set-username', username);
+
+  socket.on('send-chat', (request) => {
     const response = {
-      message: msg,
+      username: request.username,
+      message: request.message,
       timestamp: getTimeStamp()
     }
     socket.broadcast.emit('chat-message', response);
@@ -23,6 +30,12 @@ io.on('connection', (socket) => {
 http.listen(3000, () => {
   console.log('listening on *:3000');
 });
+
+function generateUserName() {
+  const username = "User" + (users.length + 1)
+  users.push(username);
+  return username;
+}
 
 function getTimeStamp() {
   const date = new Date();

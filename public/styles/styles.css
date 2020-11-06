@@ -53,11 +53,11 @@ form button {
   margin: 15px;
 }
 
-.message-container-left {
+.message-container-chat {
   flex-direction: row;
 }
 
-.message-container-right {
+.message-container-self {
   flex-direction: row-reverse;
 }
 
@@ -75,17 +75,17 @@ form button {
   align-items: center;
 }
 
-.message-content-left {
+.message-content-chat {
   background-color: #404040;
   border-radius: 12px 12px 12px 3px;
 }
 
-.message-content-right {
+.message-content-self {
   border-radius: 12px 12px 3px 12px;
   background-color: #00cc99;
 }
 
-.timestamp {
+.message-info {
   color: #cccccc;
   font-size: 12px;
 }
