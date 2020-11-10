@@ -13,17 +13,21 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   const username = generateUserName();
-  socket.broadcast.emit('join-message', username);
-  socket.emit('set-username', username);
+  const initResponse = {
+    username: username,
+    userList: users
+  }
+  socket.emit('init', initResponse);
+  socket.broadcast.emit('add-user', username);
 
   socket.on('send-chat', (request) => {
-    const response = {
+    const messageResponse = {
       username: request.username,
       message: request.message,
       timestamp: getTimeStamp()
     }
-    socket.broadcast.emit('chat-message', response);
-    socket.emit('self-message', response);
+    socket.broadcast.emit('chat-message', messageResponse);
+    socket.emit('self-message', messageResponse);
   });
 });
 

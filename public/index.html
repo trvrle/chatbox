@@ -7,11 +7,14 @@
   </head>
   <body>
     <div class="container">
-      <div id="messages"></div>
-      <form action="">
-        <input id="m" autocomplete="off" />
-        <button>Send</button>
-      </form>
+      <div id="user-list">Online Users:</div>
+      <div class="chat-container">
+        <div id="messages"></div>
+        <form action="">
+          <input id="m" autocomplete="off" />
+          <button>Send</button>
+        </form>
+      </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
