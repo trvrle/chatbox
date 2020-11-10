@@ -33,10 +33,6 @@ $(function () {
         createJoinMessage(response);
         addUser(response);
     }); 
-
-    socket.on('join-message', function(response) {
-        createJoinMessage(response);
-    });
 });
 
 function createSelfMessage(r) {
@@ -77,7 +73,10 @@ function createJoinMessage(name) {
 
 function setUserList(users) {
     users.forEach(user => {
-        addUser(user)
+        if(user === username)
+            addUser(user + " (you)");
+        else
+            addUser(user)
     });
 }
 
