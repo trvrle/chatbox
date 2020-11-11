@@ -25,7 +25,6 @@ $(function () {
     });
 
     socket.on('chat-message', function(response) {
-        console.log(response);
         createChatMessage(response);
     });
 
@@ -33,6 +32,10 @@ $(function () {
         createJoinMessage(response);
         addUser(response);
     }); 
+    socket.on('remove-user', function(response) {
+        createLeaveMessage(response);
+        removeUser(response)
+    });
 });
 
 function createSelfMessage(r) {
@@ -47,7 +50,7 @@ function createMessage(r, type) {
     $('#messages').append(
         $('<div>').addClass(`message-container message-container-${type}`).append(
             $('<div>').addClass("message").append(
-                $('<div>').addClass("message-info").text(r.username + " at " + r.timestamp)).append(
+                $('<div>').addClass("message-info").text(`${r.username} at ${r.timestamp}`)).append(
                 $('<div>').addClass(`message-content message-content-${type}`).text(r.message)
             )
         )
@@ -64,7 +67,18 @@ function createJoinMessage(name) {
     $('#messages').append(
         $('<div>').addClass("message-container message-container-chat").append(
             $('<div>').addClass("message").append(
-                $('<div>').addClass("message-info").text(name + " has joined the chat")
+                $('<div>').addClass("message-info").text(`${name} has joined the chat`)
+            )
+        )
+    );
+    updateScroll();
+}
+
+function createLeaveMessage(name) {
+    $('#messages').append(
+        $('<div>').addClass("message-container message-container-chat").append(
+            $('<div>').addClass("message").append(
+                $('<div>').addClass("message-info").text(`${name} has left the chat`)
             )
         )
     );
@@ -82,6 +96,10 @@ function setUserList(users) {
 
 function addUser(name) {
     $('#user-list').append(
-        $('<div>').addClass("user").text(name)
+        $('<div>').attr('id', name).addClass("user").text(name)
     );
+}
+
+function removeUser(name) {
+    $(`#${name}`).remove();
 }

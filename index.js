@@ -4,6 +4,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 let users = [];
+let clients = [];
 
 app.use(express.static("public"));
 
@@ -12,6 +13,7 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  clients.push(socket);
   const username = generateUserName();
   const initResponse = {
     username: username,
@@ -28,6 +30,12 @@ io.on('connection', (socket) => {
     }
     socket.broadcast.emit('chat-message', messageResponse);
     socket.emit('self-message', messageResponse);
+  });
+
+  socket.on('disconnect', function() {
+    const i = clients.indexOf(socket);
+    clients.splice(i, 1);
+    socket.broadcast.emit('remove-user', users.splice(i, 1)[0]);
   });
 });
 
