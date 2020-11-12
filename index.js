@@ -4,8 +4,11 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 let users = [];
+let colors = [];
 let clients = [];
 let chatLog = [];
+
+const defaultColor = "#ff0000";
 
 app.use(express.static("public"));
 
@@ -18,6 +21,7 @@ io.on('connection', (socket) => {
   const username = generateUserName();
   const initResponse = {
     username: username,
+    color: defaultColor,
     userList: users,
     chatLog: chatLog
   }
@@ -27,8 +31,9 @@ io.on('connection', (socket) => {
   socket.on('send-chat', (request) => {
     const messageResponse = {
       username: request.username,
-      text: request.text,
-      timestamp: getTimeStamp()
+      color: request.color,
+      timestamp: getTimeStamp(),
+      text: request.text
     }
     saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
@@ -39,7 +44,13 @@ io.on('connection', (socket) => {
     changeUsername(request.newName, request.oldName);
     socket.emit('change-username', request.newName);
     io.emit('update-user-list', users);
-  })
+  });
+
+  socket.on('change-color', (request) => {
+    changeColor(request.username, request.color);
+    socket.emit('change-color', request.color);
+    // io.emit('update-chat-log', chatLog);
+  });
 
   socket.on('disconnect', function() {
     const i = clients.indexOf(socket);
@@ -77,7 +88,12 @@ function saveMessage(chat) {
 
 function changeUsername(newName, oldName) {
   let index = users.indexOf(oldName);
-  if (~index) {
+  if (~index) 
     users[index] = newName;
-  }
+}
+
+function changeColor(username, color) {
+  let index = users.indexOf(username);
+  if(~index) 
+    colors[index] = color;
 }
