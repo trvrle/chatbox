@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 
 let users = [];
 let clients = [];
+let chatLog = [];
 
 app.use(express.static("public"));
 
@@ -17,7 +18,8 @@ io.on('connection', (socket) => {
   const username = generateUserName();
   const initResponse = {
     username: username,
-    userList: users
+    userList: users,
+    chatLog: chatLog
   }
   socket.emit('init', initResponse);
   socket.broadcast.emit('add-user', username);
@@ -28,6 +30,7 @@ io.on('connection', (socket) => {
       message: request.message,
       timestamp: getTimeStamp()
     }
+    saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
     socket.emit('self-message', messageResponse);
   });
@@ -40,7 +43,7 @@ io.on('connection', (socket) => {
 });
 
 http.listen(3000, () => {
-  console.log('listening on *:3000');
+  console.log('listening on port 3000');
 });
 
 function generateUserName() {
@@ -58,4 +61,10 @@ function getTimeStamp() {
   hours = hours ? hours : 12;
   minutes = minutes < 10 ? "0" + minutes : minutes;
   return hours + ":" + minutes + ampm;
+}
+
+function saveMessage(chat) {
+  chatLog.push(chat);
+  if(chatLog.length > 200) 
+    chatLog.shift()
 }

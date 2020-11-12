@@ -17,7 +17,8 @@ $(function () {
 
     socket.on('init', function(response) {
         username = response.username;
-        setUserList(response.userList);
+        initUserList(response.userList);
+        initChatLog(response.chatLog);
     });
 
     socket.on('self-message', function(response) {
@@ -85,7 +86,7 @@ function createLeaveMessage(name) {
     updateScroll();
 }
 
-function setUserList(users) {
+function initUserList(users) {
     users.forEach(user => {
         if(user === username)
             addUser(user + " (you)");
@@ -102,4 +103,13 @@ function addUser(name) {
 
 function removeUser(name) {
     $(`#${name}`).remove();
+}
+
+function initChatLog(chatLog) {
+    chatLog.forEach(chatMessage => {
+        if(chatMessage.username == username)
+            createSelfMessage(chatMessage);
+        else
+            createChatMessage(chatMessage);
+    });
 }
