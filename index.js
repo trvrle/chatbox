@@ -27,13 +27,19 @@ io.on('connection', (socket) => {
   socket.on('send-chat', (request) => {
     const messageResponse = {
       username: request.username,
-      message: request.message,
+      text: request.text,
       timestamp: getTimeStamp()
     }
     saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
     socket.emit('self-message', messageResponse);
   });
+
+  socket.on('change-username', (request) => {
+    changeUsername(request.newName, request.oldName);
+    socket.emit('change-username', request.newName);
+    io.emit('update-user-list', users);
+  })
 
   socket.on('disconnect', function() {
     const i = clients.indexOf(socket);
@@ -67,4 +73,11 @@ function saveMessage(chat) {
   chatLog.push(chat);
   if(chatLog.length > 200) 
     chatLog.shift()
+}
+
+function changeUsername(newName, oldName) {
+  let index = users.indexOf(oldName);
+  if (~index) {
+    users[index] = newName;
+  }
 }
