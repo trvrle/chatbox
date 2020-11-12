@@ -22,7 +22,7 @@ $(function () {
             const color = m.val().split(" ")[1];
             m.val('')
             const request = {
-                name: username,
+                username: username,
                 color: color
             }
             socket.emit('change-color', request);
@@ -41,8 +41,8 @@ $(function () {
     socket.on('init', function(response) {
         username = response.username;
         color = response.color;
-        initChatLog(response.chatLog);
-        initUserList(response.userList);
+        updateChatLog(response.chatLog);
+        updateUserList(response.userList);
     });
 
     socket.on('self-message', function(response) {
@@ -68,11 +68,15 @@ $(function () {
     });
 
     socket.on('change-color', function(newColor) {
-
+        color = newColor;
     });
 
     socket.on('update-user-list', function(userList) {
         updateUserList(userList);
+    });
+
+    socket.on('update-chat-log', function(response) {
+        updateChatLog(response);
     });
 });
 
@@ -120,16 +124,18 @@ function updateScroll() {
     messages.scrollTop = messages.scrollHeight;
 }
 
-function initChatLog(chatLog) {
+function updateChatLog(chatLog) {
+    clearMessages();
     chatLog.forEach(chatMessage => {
-        if(chatMessage.username == username)
+        if(chatMessage.username === username)
             createSelfMessage(chatMessage.username, chatMessage.color, chatMessage.timestamp, chatMessage.text);
         else
             createChatMessage(chatMessage.username, chatMessage.color, chatMessage.timestamp, chatMessage.text);
     });
 }
 
-function initUserList(userList) {
+function updateUserList(userList) {
+    clearUserList();
     userList.forEach(user => {
         if(user === username)
             addUser(user + " (you)");
@@ -148,11 +154,10 @@ function removeUser(name) {
     $(`#${name}`).remove();
 }
 
-function updateUserList(userList) {
-    clearUserList();
-    initUserList(userList);
-}
-
 function clearUserList() {
     $('#user-list').empty();
+}
+
+function clearMessages() {
+    $('#messages').empty();
 }
