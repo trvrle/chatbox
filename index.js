@@ -18,15 +18,6 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   clients.push(socket);
-  const username = generateUserName();
-  const initResponse = {
-    username: username,
-    color: defaultColor,
-    userList: users,
-    chatLog: chatLog
-  }
-  socket.emit('init', initResponse);
-  socket.broadcast.emit('add-user', username);
 
   socket.on('send-chat', (request) => {
     const messageResponse = {
@@ -38,6 +29,27 @@ io.on('connection', (socket) => {
     saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
     socket.emit('self-message', messageResponse);
+  });
+
+  socket.on('init', (request) => {
+    let username = request.username;
+    let color = request.color;
+    if(request.username === "")
+      username = generateUserName();
+    if(request.color === "")
+      color = defaultColor;
+      
+    users.push(username);
+    colors.push(color);
+    
+    const response = {
+      username: username,
+      color: color,
+      userList: users,
+      chatLog: chatLog
+    };
+    socket.emit('init', response);
+    socket.broadcast.emit('add-user', username);
   });
 
   socket.on('change-username', (request) => {
@@ -67,7 +79,6 @@ http.listen(3000, () => {
 
 function generateUserName() {
   const username = "User" + (users.length + 1)
-  users.push(username);
   return username;
 }
 

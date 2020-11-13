@@ -1,8 +1,14 @@
 let username = "";
 let color = "";
+let cookieManager = new CookieManager();
 
 $(function () {
     var socket = io();
+    socket.emit('init', {
+        username: cookieManager.getCookieValue("username"),
+        color: cookieManager.getCookieValue("color")
+    });
+
     $('form').submit(function(e) {
         e.preventDefault(); // prevents page reloading
         const m = $('#m')
@@ -19,7 +25,7 @@ $(function () {
             return false;
         }
         else if (m.val().startsWith("/color ")) {
-            const color = m.val().split(" ")[1];
+            const color = "#" + m.val().split(" ")[1];
             m.val('')
             const request = {
                 username: username,
@@ -43,6 +49,8 @@ $(function () {
         color = response.color;
         updateChatLog(response.chatLog);
         updateUserList(response.userList);
+        cookieManager.saveCookie("username", response.username);
+        cookieManager.saveCookie("color", response.color);
     });
 
     socket.on('self-message', function(response) {
@@ -60,15 +68,17 @@ $(function () {
 
     socket.on('remove-user', function(response) {
         createLeaveMessage(response);
-        removeUser(response)
+        removeUser(response);
     });
 
     socket.on('change-username', function(newUsername) {
         username = newUsername;
+        cookieManager.saveCookie("username", newUsername);
     });
 
     socket.on('change-color', function(newColor) {
         color = newColor;
+        cookieManager.saveCookie("color", newColor);
     });
 
     socket.on('update-user-list', function(userList) {
@@ -81,11 +91,11 @@ $(function () {
 });
 
 function createSelfMessage(name, color, timestamp, text) {
-    createMessage(name, color, timestamp, text, "self")
+    createMessage(name, color, timestamp, text, "self");
 }
 
 function createChatMessage(name, color, timestamp, text) {
-    createMessage(name, color, timestamp, text, "chat")
+    createMessage(name, color, timestamp, text, "chat");
 }
 
 function createMessage(name, color, timestamp, text, type) {
@@ -105,7 +115,7 @@ function createJoinMessage(name) {
 }
 
 function createLeaveMessage(name) {
-    createInfoMessage(name, "left")
+    createInfoMessage(name, "left");
 }
 
 function createInfoMessage(name, type) {
@@ -140,7 +150,7 @@ function updateUserList(userList) {
         if(user === username)
             addUser(user + " (you)");
         else
-            addUser(user)
+            addUser(user);
     });
 }
 
