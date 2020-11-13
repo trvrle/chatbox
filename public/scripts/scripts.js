@@ -35,6 +35,11 @@ $(function () {
             socket.emit('change-color', request);
             return false;
         }
+        else if(m.val().startsWith("/")) {
+            displaySnackbar("Unrecognized command. Available commands are /name and /color");
+            m.val('');
+            return false;
+        }
         const request = {
             username: username,
             color: color,
@@ -89,6 +94,10 @@ $(function () {
     socket.on('update-chat-log', function(response) {
         updateChatLog(response);
     });
+
+    socket.on('display-snackbar', function(response) {
+        displaySnackbar(response);
+    });
 });
 
 function updateChatLog(chatLog) {
@@ -127,4 +136,13 @@ function clearUserList() {
 
 function clearMessages() {
     $('#messages').empty();
+}
+
+function displaySnackbar(text) {
+    const snackbar = document.querySelector("#snackbar");
+    snackbar.innerHTML = text;
+    snackbar.classList.add("active");
+    setTimeout(function() {
+        snackbar.classList.remove("active");
+    }, 3000);
 }

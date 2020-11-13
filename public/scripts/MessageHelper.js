@@ -20,11 +20,11 @@ class MessageHelper {
     }
     
     createJoinMessage(name) {
-        createInfoMessage(name, "joined");
+        this.createInfoMessage(name, "joined");
     }
     
     createLeaveMessage(name) {
-        createInfoMessage(name, "left");
+        this.createInfoMessage(name, "left");
     }
     
     createInfoMessage(name, type) {

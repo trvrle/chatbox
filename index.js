@@ -53,10 +53,14 @@ io.on('connection', (socket) => {
   });
 
   socket.on('change-username', (request) => {
-    changeUsername(request.newName, request.oldName);
-    socket.emit('change-username', request.newName);
-    io.emit('update-user-list', users);
-    io.emit('update-chat-log', chatLog);
+    if(users.includes(request.newName))
+      socket.emit('display-snackbar', `The name ${request.newName} is already taken. Please try another name.`);
+    else {
+      changeUsername(request.newName, request.oldName);
+      socket.emit('change-username', request.newName);
+      io.emit('update-user-list', users);
+      io.emit('update-chat-log', chatLog);
+    }
   });
 
   socket.on('change-color', (request) => {
