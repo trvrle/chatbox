@@ -1,4 +1,4 @@
-class CookieManager {
+class CookieHelper {
     saveCookie(key, value) {
         document.cookie = `${key}=${value}; path=/; max-age=31536000`;
     }

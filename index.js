@@ -19,6 +19,27 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   clients.push(socket);
 
+  socket.on('init', (request) => {
+    let username = request.username;
+    let color = request.color;
+    if(request.username === "" || users.includes(request.username))
+      username = generateUserName();
+    if(request.color === "")
+      color = defaultColor;
+      
+    users.push(username);
+    colors.push(color);
+
+    const response = {
+      username: username,
+      color: color,
+      userList: users,
+      chatLog: chatLog
+    };
+    socket.emit('init', response);
+    socket.broadcast.emit('add-user', username);
+  });
+
   socket.on('send-chat', (request) => {
     const messageResponse = {
       username: request.username,
@@ -29,27 +50,6 @@ io.on('connection', (socket) => {
     saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
     socket.emit('self-message', messageResponse);
-  });
-
-  socket.on('init', (request) => {
-    let username = request.username;
-    let color = request.color;
-    if(request.username === "")
-      username = generateUserName();
-    if(request.color === "")
-      color = defaultColor;
-      
-    users.push(username);
-    colors.push(color);
-    
-    const response = {
-      username: username,
-      color: color,
-      userList: users,
-      chatLog: chatLog
-    };
-    socket.emit('init', response);
-    socket.broadcast.emit('add-user', username);
   });
 
   socket.on('change-username', (request) => {
@@ -78,7 +78,12 @@ http.listen(3000, () => {
 });
 
 function generateUserName() {
-  const username = "User" + (users.length + 1)
+  let number = Math.floor((Math.random() * 100)); // generate a random number from 1 and 99
+  let username = `User${number}`;
+  while(users.includes(username)) {
+    number = Math.floor((Math.random() * 100));
+    username = `User${number}`;
+  }
   return username;
 }
 
