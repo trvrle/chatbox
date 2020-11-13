@@ -64,9 +64,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on('change-color', (request) => {
-    changeColor(request.username, request.color);
-    socket.emit('change-color', request.color);
-    io.emit('update-chat-log', chatLog);
+    const hexRegex = /[0-9A-Fa-f]{6}/g;
+    if(request.color.length != 6 || !hexRegex.test(request.color)) {
+      socket.emit('display-snackbar', `${request.color} is an invalid color. Please enter a valid color: RRGGBB`);
+    }
+    else {
+      const color = `#${request.color}`;
+      changeColor(request.username, color);
+      socket.emit('change-color', color);
+      io.emit('update-chat-log', chatLog);
+    }
   });
 
   socket.on('disconnect', function() {

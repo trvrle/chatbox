@@ -26,7 +26,7 @@ $(function () {
             return false;
         }
         else if (m.val().startsWith("/color ")) {
-            const color = "#" + m.val().split(" ")[1];
+            const color = m.val().split(" ")[1];
             m.val('')
             const request = {
                 username: username,
