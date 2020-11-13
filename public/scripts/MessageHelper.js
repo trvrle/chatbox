@@ -8,6 +8,7 @@ class MessageHelper {
     }
     
     createMessage(name, color, timestamp, text, type) {
+        text = this.emojiDecorate(text);
         $('#messages').append(
             $('<div>').addClass(`message-container message-container-${type}`).append(
                 $('<div>').addClass("message").append(
@@ -41,5 +42,14 @@ class MessageHelper {
     updateScroll() {
         let messages = document.getElementById("messages");
         messages.scrollTop = messages.scrollHeight;
+    }
+
+    emojiDecorate(text) {
+        if(text.includes(":")) {
+            text = text.replaceAll(":)", "&#128578;");
+            text = text.replaceAll(":(", "&#128577;");
+            text = text.replaceAll(":o", "&#128558;");
+          }
+          return text;
     }
 }
