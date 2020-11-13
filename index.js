@@ -41,11 +41,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send-chat', (request) => {
+    const text = emojiDecorate(request.text)
     const messageResponse = {
       username: request.username,
       color: request.color,
       timestamp: getTimeStamp(),
-      text: request.text
+      text: text
     }
     saveMessage(messageResponse);
     socket.broadcast.emit('chat-message', messageResponse);
@@ -128,4 +129,13 @@ function changeColor(username, color) {
         chatMessage.color = color;
     });
   }
+}
+
+function emojiDecorate(text) {
+  if(text.includes(":")) {
+    text = text.replace(/:\)/g, "&#128578;");
+    text = text.replace(/:\(/g, "&#128577;");
+    text = text.replace(/:o/g, "&#128558;");
+  }
+  return text;
 }

@@ -12,7 +12,7 @@ class MessageHelper {
             $('<div>').addClass(`message-container message-container-${type}`).append(
                 $('<div>').addClass("message").append(
                     $('<div>').addClass("message-info").text(`${name} at ${timestamp}`).css("color", color)).append(
-                    $('<div>').addClass(`message-content message-content-${type}`).text(text)
+                    $('<div>').addClass(`message-content message-content-${type}`).html(text)
                 )
             )
         );
