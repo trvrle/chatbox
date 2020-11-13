@@ -45,6 +45,8 @@ body {
 }
 
 form {
+  display: flex;
+  justify-content: space-between;
   background-color: #404040;
   margin-top: auto;
   padding: 20px;
@@ -58,8 +60,13 @@ form input {
   margin-right: 0.5%;
 }
 
-form button {
+.button-container {
+  display: flex;
+  justify-content: center;
   width: 9%;
+}
+
+.button-container button {
   background: rgb(130, 224, 255);
   border: none;
   padding: 10px;
